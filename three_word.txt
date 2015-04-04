@@ -1,39 +1,39 @@
- 	THE
- 	AND
- 	FOR
- 	ARE
- 	BUT
- 	NOT
- 	YOU
- 	ALL
- 	ANY
- 	CAN
- 	HAD
- 	HER
- 	WAS
- 	ONE
- 	OUR
- 	OUT
- 	DAY
- 	GET
- 	HAS
- 	HIM
- 	HIS
- 	HOW
- 	MAN
- 	NEW
- 	NOW
- 	OLD
- 	SEE
- 	TWO
- 	WAY
- 	WHO
- 	BOY
- 	DID
- 	ITS
- 	LET
- 	PUT
- 	SAY
- 	SHE
- 	TOO
- 	USE
+THE
+AND
+FOR
+ARE
+BUT
+NOT
+YOU
+ALL
+ANY
+CAN
+HAD
+HER
+WAS
+ONE
+OUR
+OUT
+DAY
+GET
+HAS
+HIM
+HIS
+HOW
+MAN
+NEW
+NOW
+OLD
+SEE
+TWO
+WAY
+WHO
+BOY
+DID
+ITS
+LET
+PUT
+SAY
+SHE
+TOO
+USE 

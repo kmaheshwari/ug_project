@@ -1,21 +1,9 @@
-import re
-
-def pattern(word,tw):
-	for w in word:
-		if w.islower():
-			word=word.replace(w,'.')
-	print word
-	for i in range(len(tw)):
-		if re.match(word,tw[i]):
-			print tw[i]
-			return
-
 s = raw_input("Enter the ciphertext: ")
 sent= s.lower()
 words = sent.split()
 s_w = str(min(words, key=len))
 c=0
-cnt1=cnt2 =cnt3= 0
+cnt1=cnt2 = 0
 assumption = {}
 assertion = {}
 one_w = []
@@ -25,8 +13,8 @@ four_w = []
 for word in words:
 	if ((len(word) == 1) and (word not in one_w)):
 		one_w.append(word)
-	#if ((len(word) == 2) and (word not in two_w)):
-		#two_w.append(word)
+	if ((len(word) == 2) and (word not in two_w)):
+		two_w.append(word)
 	if ((len(word) == 3) and (word not in three_w)):
 		three_w.append(word)
 
@@ -40,27 +28,19 @@ if one_w:
 		cnt1=1
 		print sent
 		assumption[one_w[i]]=ow[i]
-
-for word in sent.split():
-	if ((len(word) == 2) and (word not in two_w)):
-		two_w.append(word)
-	print two_w
-	
-
+		
 if two_w:
+
 	j=u=0
 	
 	two_word = open("double_word.txt", "r+")
 	tw  = two_word.read().split()
 	print tw
-	tr=tw[cnt2]
-	print tr
 	for word in two_w:
 		
 		for t in word:
 			if t.isupper():
-				print "Hello"
-				pattern(word,tw)
+				pattern(word)
 				u+=1
         
         if u==0:
@@ -75,7 +55,7 @@ if two_w:
 		
 		
 		j+=1
-	cnt2=1
+	cnt=1
 	
 
 if three_w:
@@ -83,7 +63,7 @@ if three_w:
 	
 	three_word = open("three_word.txt", "r+")
 	trw  = three_word.read().split()
-
+	
 	for word in three_w:
 		
 		for t in word:
@@ -103,10 +83,11 @@ if three_w:
 		
 		
 		j+=1
-	cnt3=1
+	cnt2=1
 	
 
-
+def pattern(word):
+	print word
 	
 # if len(s_w) == 3:
 # 	one_word = open("single_word.txt", "r+")
