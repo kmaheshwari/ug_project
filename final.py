@@ -87,52 +87,78 @@ def backtrack(wrd,file):
                 if w in sent:
                     print "hi"
     
-def pat_rep(list,file):
+def pat_rep(lst,fil,cnt):
 
     
     j=0
-    for word in list:
+    for word in lst:
+        i = lst.index(word)
+        print "right"
         u=0    
+        ch = 0
         for t in word:
-                if t.isupper():
-                        u+=1
-                        break
+            if t in assumption:
+                word=word.replace(t,assumption[t])
+                
+                t=t.replace(t,assumption[t])
 
-        if u>=1:
-            pattern(word,file)
+            if t.isupper():
+                u+=1
+                print u
+        lst[i] = word
+        print lst
+        if u>=1 and u<len(word):
+            print word
+            pattern(word,fil,cnt)
         if u==0:
-                for fl in file:
-                    c=0
-                    for f in fl:
-                        if f in assumption.values():
-                            c=1
-                    if c==1:
-                        j+=1     
-                        replacefunc(word,file[j])
-                        break
+                
+            c=0
+            for f in fil[cnt]:
+                if f in assumption.values():
+                    c=1
+            if c>0:
+                cnt+=1
+                    
+            if c==0:
+                     
+                replacefunc(word,fil[cnt])
+                cnt+=1
+
+
+            
+            
                 
                 
         
 
-def pattern(word,fil):
+def pattern(word,fil,cnt):
         pat=""
         ol=[]
-        n=c=0
+        c=0
+        n=cnt
         wd=word
         i=0
+        
         for w in word:
                 if w.islower():
                         
                     word=word.replace(w,'.')
-        print word
-        for i in range(len(fil)):
+                    print word
+        
+
+
+        
+        while(cnt<len(fil) and c==0):
             n+=1
-            if re.match(word,fil[i]):
-                pat= fil[i]
+            if re.match(word,fil[cnt]):
+                pat= fil[cnt]
                 print pat
                 replacefunc(wd,pat)
-                
                 c=1
+            cnt+=1
+                
+
+                
         if (n == len(fil)):
             if not c==1 :
                 print "hi1"
@@ -164,7 +190,7 @@ def double_letter(word):
                             for word in sent.split():
                                 if doublew[0] in word:
                                     if spell_check(word):
-                                        print key
+                                        
                                         replacefunc(key,doublew[1])
                                         print sent
                                     else:
@@ -290,14 +316,17 @@ else:
     for word in sent.split():
            if ((len(word) == 2) and (word not in two_w) and word.islower()):
                   two_w.append(word)
+                  print two_w
            
     
     if two_w:
-        pat_rep(two_w,tw)           
-        cnt2+=1
+        pat_rep(two_w,tw,cnt2)           
+        
 
     #transposition
     if not sent.isupper():
+        print "yup"
+        print sent
         transposition()
     
     #checking A-noun pair
@@ -319,8 +348,8 @@ else:
         if ((len(word) == 3) and (word not in three_w) and word.islower()):
             three_w.append(word)
     if three_w:
-        pat_rep(three_w,trw)
-        cnt3+=1
+        pat_rep(three_w,trw,cnt3)
+        
     # for words havin double letter
     for word in sent.split():
         if (len(word) > 2):
@@ -332,9 +361,9 @@ else:
             if not word.isupper():
                 four_w.append(word)
     if four_w:
-        pat_rep(four_w,fw)
-        cnt4+=1
-    main(sent)
+        pat_rep(four_w,fw,cnt4)
+        
+    #main(sent)
 
 
 
