@@ -138,6 +138,10 @@ def pattern(word,fil,cnt):
         n=cnt
         wd=word
         i=0
+        #wlist = list(set(word))
+        #if len(wlist)<len(word):
+
+
         
         for w in word:
                 if w.islower():
@@ -257,7 +261,7 @@ if not match:
 else:
     sent = s.lower()
     words = sent.split()
-    cnt1=cnt2=cnt3=cnt4=cnt3=cnt4= 0
+    cnt1=cnt2=cnt3=cnt4=cnti3=cnti4=cntn= 0
     assumption = {}
     assertion = {}
     one_w = []
@@ -298,119 +302,125 @@ else:
 
                     
 
-    # for words having single letter
-    # for i in range(len(words)-1):
-    #     print "inloop"
-    #     if len(words[i])==1:
-    #         if len(words[i+1])==2:
-    #             ow.reverse()
+    
 
     for word in words:
             if ((len(word) == 1) and (word not in one_w)):
                     one_w.append(word)
     
     if one_w:
-        one_letter()   
-
-                                      
-    # for finding pairs with I
-    flag = 0
-    s=sent.split()
-    #for i in range(len(words)-1):
-    if len(words[0])==1:
-        if s[0]=='I':
-            print "Yuippee"
-            if (len(s[1])==2):
-                for w in s[1]:
-                    if w in s[0]:
-                        flag+=1
-                if flag==0:
-                    replacefunc(s[1],'AM')
-            if (len(s[1])==3):
-                for w in s[1]:
-                    if w in s[0]:
-                        flag+=1
-                if flag==1:
-                    if s[1].index(s[0])==1:
-                        replacefunc(s[1],'DID')
-                    else:
-                        key=find_key('I')
-                        sent=sent.replace('I',key)
-                        del assumption[key]
-                        replacefunc(key,'A')
-
-                if flag==0:
-                    replacefunc(s[1],itrw[cnt3])
-            if (len(s[1])==4):
-                for w in s[1]:
-                    if w in s[0]:
-                        flag+=1
-                if flag==1:
-                    if s[1].index(s[0])==1:
-                        if s[1][-1]==s[1][-2]: 
-                            replacefunc(s[1],'WILL')
-                        else:
-                           replacefunc(s[1],'LIKE') 
-                    else:
-                        key=find_key('I')
-                        sent=sent.replace('I',key)
-                        del assumption[key]
-                        replacefunc(key,'A')
-
-                if flag==0:
-                    replacefunc(s[1],ifw[cnt4])
-
-    # for words having two letters
-    for word in sent.split():
-           if ((len(word) == 2) and (word not in two_w) and word.islower()):
-                  two_w.append(word)
-                  print two_w
-           
-    
-    if two_w:
-        pat_rep(two_w,tw,cnt2)           
-        
-
-    #transposition
-    if not sent.isupper():
-        print "yup"
-        print sent
+        one_letter()
+        a_sent = sent #store sent before transposition 
         transposition()
-    
-    #checking A-noun pair
-    s1 = sent.split()
-    nf=nt=[]
-    for i in range(len(s1)-1):
-        if len(s1[i])==1:
-            if s1[i]=='A':
-                print s1[i+1]
-                if len(s1[i+1])==3:
-                    nt.append(s1[i+1])
-                    pat_rep(nt,ntrw)
-                if len(s1[i+1])==4:
-                    nf.append(s1[i+1])
-                    pat_rep(nf,nfw)
-    
-    # for words having three letters
-    for word in sent.split():
-        if ((len(word) == 3) and (word not in three_w) and word.islower()):
-            three_w.append(word)
-    if three_w:
-        pat_rep(three_w,trw,cnt3)
-        
-    # for words havin double letter
-    for word in sent.split():
-        if (len(word) > 2):
-            double_letter(word)
 
-    # for words having four letters
-    for word in sent.split():
-        if ((len(word) == 4) and (word not in four_w) and word.islower() ):
-            if not word.isupper():
-                four_w.append(word)
-    if four_w:
-        pat_rep(four_w,fw,cnt4)
+    spell_count = 0
+    for w in sent.split():
+        if len(w) >1:
+            if not spell_check(w):
+                spell_count = 1
+
+    if spell_count==1:                                  
+        sent = a_sent
+
+        # for finding pairs with I
+        flag = 0
+        s=sent.split()
+        #for i in range(len(words)-1):
+        if len(words[0])==1:
+            if s[0]=='I':
+                print "Yuippee"
+                if (len(s[1])==2):
+                    for w in s[1]:
+                        if w in s[0]:
+                            flag+=1
+                    if flag==0:
+                        replacefunc(s[1],'AM')
+                if (len(s[1])==3):
+                    for w in s[1]:
+                        if w in s[0]:
+                            flag+=1
+                    if flag==1:
+                        if s[1].index(s[0])==1:
+                            replacefunc(s[1],'DID')
+                        else:
+                            key=find_key('I')
+                            sent=sent.replace('I',key)
+                            del assumption[key]
+                            replacefunc(key,'A')
+
+                    if flag==0:
+                        replacefunc(s[1],itrw[cnti3])
+                if (len(s[1])==4):
+                    for w in s[1]:
+                        if w in s[0]:
+                            flag+=1
+                    if flag==1:
+                        if s[1].index(s[0])==1:
+                            if s[1][-1]==s[1][-2]: 
+                                replacefunc(s[1],'WILL')
+                            else:
+                               replacefunc(s[1],'LIKE') 
+                        else:
+                            key=find_key('I')
+                            sent=sent.replace('I',key)
+                            del assumption[key]
+                            replacefunc(key,'A')
+
+                    if flag==0:
+                        replacefunc(s[1],ifw[cnti4])
+
+        # for words having two letters
+        for word in sent.split():
+               if ((len(word) == 2) and (word not in two_w) and word.islower()):
+                      two_w.append(word)
+                      print two_w
+               
         
+        if two_w:
+         
+               pat_rep(two_w,tw,cnt2)           
+            
+
+        #transposition
+        if not sent.isupper():
+            print "yup"
+            print sent
+            transposition()
+        
+        #checking A-noun pair
+        s1 = sent.split()
+        nf=nt=[]
+        for i in range(len(s1)-1):
+            if len(s1[i])==1:
+                if s1[i]=='A':
+                    print s1[i+1]
+                    if len(s1[i+1])==3:
+                        nt.append(s1[i+1])
+                        pat_rep(nt,ntrw)
+                    if len(s1[i+1])==4:
+                        nf.append(s1[i+1])
+                        pat_rep(nf,nfw,cntn)
+        
+        # for words having three letters
+        for word in sent.split():
+            if ((len(word) == 3) and (word not in three_w) and word.islower()):
+                three_w.append(word)
+        if three_w:
+            pat_rep(three_w,trw,cnt3)
+            
+        # for words havin double letter
+        for word in sent.split():
+            if (len(word) > 2):
+                double_letter(word)
+
+        # for words having four letters
+        for word in sent.split():
+            if ((len(word) == 4) and (word not in four_w) and word.islower() ):
+                if not word.isupper():
+                    four_w.append(word)
+        if four_w:
+            pat_rep(four_w,fw,cnt4)
+            
     #main(sent)
 
 
