@@ -5,10 +5,10 @@ from grammar_test import main
 from Tkinter import *
 import string
 
-def result(strng):
+# def result(strng):
 
-    tex.insert(END,strng)
-    tex.grid()
+#     tex.insert(END,strng)
+#     tex.grid()
       
 
 
@@ -81,42 +81,65 @@ def transposition():
 #for backtrack
 def backtrack(wrd,file):
     global sent
-    if len(wrd)==2:
+    kl=[]
+
+    if len(wrd)==4:
         for w in wrd:
             if w.isupper():
-                if w in sent:
-                    print "hi"
+                    
+                    k=find_key(w)
+                    kl.append(k)
+                    sent=sent.replace(w,k)
+                    del assumption[k]
+        print sent
+        print kl
+    for word in sent.split():
+        n=0
+        
+        print word
+        for i in range(len(word)):
+            if word[i] in kl:
+                
+                n=2
+                print n
+        if n==2 :
+            print "back"
+            print len(word)
+            if(len(word)==2):
+
+                pat_rep(word,tw,cnt2)
+            if(len(word)==3):
+                pat_rep(word,trw,cnt3)
+            if(len(word)==4):
+                
+                pat_rep(word.split(),fw,cnt4)
+
+
     
 def pat_rep(lst,fil,cnt):
 
     f=fil
     j=0
+    print lst
     for word in lst:
-<<<<<<< HEAD
+        print "yooo"
+        print lst[0]
         fil=f
 
         i = lst.index(word)
 
-=======
-        i = lst.index(word)
-        print "right"
->>>>>>> 812211fc7f28bccaa3aa4679034ca2f0397f87a6
         u=0    
         ch = 0
         for t in word:
             if t in assumption:
                 word=word.replace(t,assumption[t])
-<<<<<<< HEAD
                 print word
-=======
->>>>>>> 812211fc7f28bccaa3aa4679034ca2f0397f87a6
                 
                 t=t.replace(t,assumption[t])
 
             if t.isupper():
                 u+=1
                 print u
-<<<<<<< HEAD
 
         
         print word
@@ -139,25 +162,13 @@ def pat_rep(lst,fil,cnt):
             if j==-1:
                 fil = efw
         
-        # for t in word:
-        #     if t in assumption:
-        #         word=word.replace(t,assumption[t])
-        #         print word
-                
-        #         t=t.replace(t,assumption[t])
-
-        #     if t.isupper():
-        #         u+=1
-        #         print u
-=======
->>>>>>> 812211fc7f28bccaa3aa4679034ca2f0397f87a6
+        
         lst[i] = word
         print lst
         if u>=1 and u<len(word):
             print word
             pattern(word,fil,cnt)
         if u==0:
-<<<<<<< HEAD
             while (cnt<len(fil)):
                     
                 c=0
@@ -173,20 +184,6 @@ def pat_rep(lst,fil,cnt):
                     replacefunc(word,fil[cnt])
                     cnt+=1
                     break
-=======
-                
-            c=0
-            for f in fil[cnt]:
-                if f in assumption.values():
-                    c=1
-            if c>0:
-                cnt+=1
-                    
-            if c==0:
-                     
-                replacefunc(word,fil[cnt])
-                cnt+=1
->>>>>>> 812211fc7f28bccaa3aa4679034ca2f0397f87a6
 
 
             
@@ -202,14 +199,10 @@ def pattern(word,fil,cnt):
         n=cnt
         wd=word
         i=0
-<<<<<<< HEAD
         mtch = []
         j=[]
         #wlist = list(word)
         #if len(wlist)<len(word):
-=======
-        
->>>>>>> 812211fc7f28bccaa3aa4679034ca2f0397f87a6
         for w in word:
                 wc = 0
                 if w.islower():
@@ -231,29 +224,16 @@ def pattern(word,fil,cnt):
                                                             
                     word=word.replace(w,'.')
                     print word
-<<<<<<< HEAD
                 
-=======
-        
-
-
-        
->>>>>>> 812211fc7f28bccaa3aa4679034ca2f0397f87a6
         while(cnt<len(fil) and c==0):
             n+=1
             if re.match(word,fil[cnt]):
-                pat= fil[cnt]
-                print pat
+                pat = fil[cnt]
                 replacefunc(wd,pat)
                 c=1
+                break
             cnt+=1
-<<<<<<< HEAD
                       
-=======
-                
-
-                
->>>>>>> 812211fc7f28bccaa3aa4679034ca2f0397f87a6
         if (n == len(fil)):
             if not c==1:
                 print "hi1"
@@ -412,13 +392,12 @@ else:
                     
 
     
-    
+       
     for word in words:
             if ((len(word) == 1) and (word not in one_w)):
                     one_w.append(word)
     
     if one_w:
-<<<<<<< HEAD
         one_letter()
         a_sent = sent #store sent before transposition
         print "hieee"
@@ -545,72 +524,6 @@ else:
         if four_w:
             pat_rep(four_w,fw,cnt4)
             
-=======
-        one_letter()   
-
-                                      
-    # for words having two letters
-    flag = 0
-    for i in range(len(words)-1):
-        if len(words[i])==1:
-            if (len(words[i+1])==2):
-                for w in words[i+1]:
-                    if w in words[i]:
-                        flag+=1
-                if flag==0:
-                    replacefunc(words[i+1],'AM')
-
-    for word in sent.split():
-           if ((len(word) == 2) and (word not in two_w) and word.islower()):
-                  two_w.append(word)
-                  print two_w
-           
-    
-    if two_w:
-        pat_rep(two_w,tw,cnt2)           
-        
-
-    #transposition
-    if not sent.isupper():
-        print "yup"
-        print sent
-        transposition()
-    
-    #checking A-noun pair
-    s1 = sent.split()
-    nf=nt=[]
-    for i in range(len(s1)-1):
-        if len(s1[i])==1:
-            if s1[i]=='A':
-                print s1[i+1]
-                if len(s1[i+1])==3:
-                    nt.append(s1[i+1])
-                    pat_rep(nt,ntrw)
-                if len(s1[i+1])==4:
-                    nf.append(s1[i+1])
-                    pat_rep(nf,nfw)
-    
-    # for words having three letters
-    for word in sent.split():
-        if ((len(word) == 3) and (word not in three_w) and word.islower()):
-            three_w.append(word)
-    if three_w:
-        pat_rep(three_w,trw,cnt3)
-        
-    # for words havin double letter
-    for word in sent.split():
-        if (len(word) > 2):
-            double_letter(word)
-
-    # for words having four letters
-    for word in sent.split():
-        if ((len(word) == 4) and (word not in four_w) and word.islower() ):
-            if not word.isupper():
-                four_w.append(word)
-    if four_w:
-        pat_rep(four_w,fw,cnt4)
-        
->>>>>>> 812211fc7f28bccaa3aa4679034ca2f0397f87a6
     #main(sent)
 
 
