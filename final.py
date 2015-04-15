@@ -89,40 +89,78 @@ def backtrack(wrd,file):
     
 def pat_rep(lst,fil,cnt):
 
-    
+    f=fil
     j=0
     for word in lst:
+        fil=f
+
         i = lst.index(word)
-        print "right"
+
         u=0    
         ch = 0
         for t in word:
             if t in assumption:
                 word=word.replace(t,assumption[t])
+                print word
                 
                 t=t.replace(t,assumption[t])
 
             if t.isupper():
                 u+=1
                 print u
+
+        
+        print word
+        j = (sent.split()).index(word)
+        print j
+        if len(word) == 3:
+
+            print "right"
+            if j==0:
+                fil = stw
+                print fil
+            if j==-1:
+                fil = etw
+        if len(word) == 4:
+            print "right4"
+            if j==0:
+                fil = sfw
+             
+             
+            if j==-1:
+                fil = efw
+        
+        # for t in word:
+        #     if t in assumption:
+        #         word=word.replace(t,assumption[t])
+        #         print word
+                
+        #         t=t.replace(t,assumption[t])
+
+        #     if t.isupper():
+        #         u+=1
+        #         print u
         lst[i] = word
         print lst
         if u>=1 and u<len(word):
             print word
             pattern(word,fil,cnt)
         if u==0:
-                
-            c=0
-            for f in fil[cnt]:
-                if f in assumption.values():
-                    c=1
-            if c>0:
-                cnt+=1
+            while (cnt<len(fil)):
                     
-            if c==0:
-                     
-                replacefunc(word,fil[cnt])
-                cnt+=1
+                c=0
+                
+                for f in fil[cnt]:
+                    if f in assumption.values():
+                        c=1
+                if c>0:
+                    cnt+=1
+                        
+                if c==0:
+                         
+                    replacefunc(word,fil[cnt])
+                    cnt+=1
+                    break
 
 
             
@@ -138,20 +176,32 @@ def pattern(word,fil,cnt):
         n=cnt
         wd=word
         i=0
-        #wlist = list(set(word))
+        mtch = []
+        j=[]
+        #wlist = list(word)
         #if len(wlist)<len(word):
-
-
-        
         for w in word:
+                wc = 0
                 if w.islower():
-                        
+                    wc = word.count(w)
+                    print wc
+                    if wc>1:
+                        print "mtch"
+                        j.append((word.index(w)))
+                        fil = mtch
+        print fil
+        if fil == mtch:
+            for wrd in fil:
+                if wrd[j[0]] == wrd[j[1]]:
+                    fil.append(wrd)
+            print fil
+        for w in word:
+                wc = 0
+                if w.islower():
+                                                            
                     word=word.replace(w,'.')
                     print word
-        
-
-
-        
+                
         while(cnt<len(fil) and c==0):
             n+=1
             if re.match(word,fil[cnt]):
@@ -160,11 +210,9 @@ def pattern(word,fil,cnt):
                 replacefunc(wd,pat)
                 c=1
             cnt+=1
-                
-
-                
+                      
         if (n == len(fil)):
-            if not c==1 :
+            if not c==1:
                 print "hi1"
                 backtrack(wd,fil)
 
@@ -269,6 +317,7 @@ else:
     three_w = []
     four_w = []
     double_w = []
+    a_sent=sent
 
     #to open all the required files
     one_word = open("single_word.txt", "r+")
@@ -299,18 +348,36 @@ else:
     ifour_word = open("I_4wrd.txt", "r+")
     ifw  = ifour_word.read().split()
 
+    #open ending four letter list 
+    e_4wrd = open("e_4wrd.txt", "r+")
+    efw  = e_4wrd.read().split()
+
+    #open ending three letter list 
+    e_3wrd = open("e_3wrd.txt", "r+")
+    etw  = e_3wrd.read().split()
+
+    #open starting four letter list 
+    st_4wrd = open("st_4wrd.txt", "r+")
+    sfw  = st_4wrd.read().split()
+
+    #open starting three letter list 
+    st_3wrd = open("st_3wrd.txt", "r+")
+    stw  = st_3wrd.read().split()
+
+
 
                     
 
     
-
+    
     for word in words:
             if ((len(word) == 1) and (word not in one_w)):
                     one_w.append(word)
     
     if one_w:
         one_letter()
-        a_sent = sent #store sent before transposition 
+        a_sent = sent #store sent before transposition
+        print "hieee"
         transposition()
 
     spell_count = 0
@@ -319,8 +386,21 @@ else:
             if not spell_check(w):
                 spell_count = 1
 
-    if spell_count==1:                                  
+    if spell_count==1:
+        k=[]                              
         sent = a_sent
+        for w in sent:
+            if w.isupper():
+                k.append((find_key(w)))
+        print k
+        assumption.clear()
+        if len(k)==1:
+            assumption[k[0]] = 'I'
+        if len(k) > 1:
+            assumption[k[1]] = 'A'
+        #assumption = a_assump
+        print "this is "
+        print assumption
 
         # for finding pairs with I
         flag = 0
@@ -382,10 +462,10 @@ else:
             
 
         #transposition
-        if not sent.isupper():
-            print "yup"
-            print sent
-            transposition()
+        # if not sent.isupper():
+        #     print "yup"
+        #     print sent
+        #     transposition()
         
         #checking A-noun pair
         s1 = sent.split()
@@ -415,7 +495,7 @@ else:
 
         # for words having four letters
         for word in sent.split():
-            if ((len(word) == 4) and (word not in four_w) and word.islower() ):
+            if ((len(word) == 4) and (word not in four_w) ):
                 if not word.isupper():
                     four_w.append(word)
         if four_w:
