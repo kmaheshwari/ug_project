@@ -24,28 +24,27 @@ def find_key(value):
             return k
 
 def spell_check(word):
+    #checks the spelling of the word and returns true if the spelling is correct
     if ((len(word) == 2)):
-        two_word = open("double_word.txt", "r+")
-        tw  = two_word.read().split()
+        #if two-letter word
         if word in tw:
             return True
     if ((len(word) == 3)):
-        three_word = open("three_word.txt", "r+")
-        trw  = three_word.read().split()
+        #if three-letter word
         if word in trw:
             return True
     if ((len(word) == 4)):
-        four_word = open("four_word.txt", "r+")
-        fw  = four_word.read().split()
+        #if four-letter word
         if word in fw:
             return True
     if ((len(word) > 4) ):
         return True
     return False
 
-def replacefunc(word,list):
+def replacefunc(word,file_word):
+    #replaces the word passed with a word from file
         global sent
-        for w,c in zip(word,list):
+        for w,c in zip(word,file_word):
             if w.islower():
                 if c not in assumption.values():
                     sent = sent.replace(w, c)
@@ -54,6 +53,7 @@ def replacefunc(word,list):
                     print assumption
                 
 def transposition():
+    #checks if 
     global sent
     upper = []
     p = c =0
@@ -91,49 +91,54 @@ def transposition():
 
 
 #for backtrack
-# def backtrack(wrd):
-#     global sent
-    
-#     kl=[]
-#     print "backtrack started"
-#     for w in wrd:
-#         if w.isupper():
-                
-#                 k=find_key(w)
-#                 kl.append(k)
-#                 sent=sent.replace(w,k)
-#                 del assumption[k]
-#     print sent
-#     s = sent.split()
-#     print k
-#     j = True
-#     while(j):
-#         c=0
-#         for i in range(len(s)):
-#             if s[i].isupper():
-#                 if not spell_check(s[i]):
-#                     si = s[i]
-#                     i=0
-#                     c=0
-#                     backtrack(si)
-#                 else:
-#                     c+=1
-#             else:
-#                 if(len(s[i])==2):
+def backtrack(wrd):
+    #wrd: word for which no pattern was found
+    global sent
 
-#                     pat_rep(s[i].split(),tw,cnt2)
-#                 if(len(s[i])==3):
-#                     pat_rep(s[i].split(),trw,cnt3)
-#                 if(len(s[i])==4):
-                    
-#                     pat_rep(s[i].split(),fw,cnt4)
-#         if c == len(s):
-#             j = False
+    kl=[]
+    print "backtrack started"
+    for w in wrd:
+     if w.isupper():
+            
+             k=find_key(w)
+             kl.append(k)
+             sent=sent.replace(w,k)
+             del assumption[k]
+    print sent
+    s = sent.split()
+    print k
+    j = True
+
+    while(j):
+     c=0
+     for i in range(len(s)):
+        #if any word which is already replaced in sentence does not have correct spelling 
+        #then backtrack is called again on that word else counter is increased for every corerct word.
+         if s[i].isupper():
+             if not spell_check(s[i]):
+                 si = s[i]
+                 #i=0
+                 c=0
+                 backtrack(si)
+             else:
+                 c+=1
+        #if every letter of the word in sentence is not replaced then call pat_rep function for it.
+         else:
+             if(len(s[i])==2):
+                 pat_rep(s[i].split(),tw,cnt2)
+             if(len(s[i])==3):
+                 pat_rep(s[i].split(),trw,cnt3)
+             if(len(s[i])==4):
+                
+                 pat_rep(s[i].split(),fw,cnt4)
+     #if all the words of the sentence are correct then terminate the while loop to end backtrack.
+     if c == len(s):
+         j = False
+
     
-        
             
 
-def spell_count():
+def trans_status():
     global sent
     for w in sent.split():
         if len(w) >1:
@@ -145,70 +150,73 @@ def spell_count():
 
 
 def pat_rep(lst,fil,cnt):
-
+	#lst:list of specific words(i.e 2-letter, 3-letter etc) in the sentence containing cipher letters.
+	#fil:text file of containing 2-letter,3-letter etc plain-letter words corresponding to list.
+	#cnt:counter to mention the position in the file
+	#pat_rep function replaces the words from list with suitable word from file according to condition.
     f=fil
     j=0
     print lst
     for word in lst:
         print "inside pat_rep"
-        print lst[0]
-        
         print fil
-        i = lst.index(word)
-
-        u=0    
-        ch = 0
+        i = lst.index(word)		#index of word in list
+        cnt_cap=0    			#counter for capital letter in a word
         for t in word:
-            if t in assumption:
+        	#if a letter in word of list is already in assumption replace the cipher-letter with 
+        	#corresponding plainletter entry in assumption
+            if t in assumption:		
                 word=word.replace(t,assumption[t])
                 print word
                 
                 t=t.replace(t,assumption[t])
-
+            #if a letter in word is capital increase counter
             if t.isupper():
-                u+=1
-                print u
-
-        
+                cnt_cap+=1
+                print cnt_cap
+       
         print word
-        j = (sent.split()).index(word)
+        j = (sent.split()).index(word)		#index of word in original sentence which is modified
         print j
-        if len(word) == 3:
 
-            print "right"
+        if len(word) == 3:
+            print "3-letter word"
+            #if a 3-letter word is in starting/ending position then replace the file with another file containing 
+            #all possible 3-letter words which can come at starting or ending
             if j==0:
                 fil = stw
-                print fil
-            if j==-1:
+            if j==len(sent.split())-1:
                 fil = etw
         if len(word) == 4:
-            print "right4"
+        	#if a 4-letter word is in starting/ending position then replace the file with another file containing 
+            #all possible 4-letter words which can come at starting or ending
+            print "4 letter word"
             if j==0:
                 fil = sfw
-            if j==-1:
+            if j==len(sent.split())-1:
                 fil = efw
-        print "file check"
-        print fil
         lst[i] = word
+        print fil
         print lst
-        if u>=1 and u<len(word):
+        #if the word contains any capital letter then call pattern matching
+        if cnt_cap>=1 and cnt_cap<len(word):
             print word
             pattern(word,fil,cnt)
-        if u==0:
+        #if the word does not contain any capital letter then replace the word with word in file 
+        if cnt_cap==0:
             print "inside word re"
-            print len(fil)
+            print cnt
+            #start from the position of counter in the file
             while (cnt<len(fil)):
-                    
                 c=0
-                
+                #if the letter of word from file is already in assumption increase the counter to 
+                #replace with the next word else replace with the same word
                 for f in fil[cnt]:
                     if f in assumption.values():
                         c=1
                 if c>0:
                     cnt+=1
-                        
                 if c==0:
-                         
                     replacefunc(word,fil[cnt])
                     cnt+=1
                     break
@@ -232,23 +240,23 @@ def revert_trans():
     #assumption = a_assump
     print "this is "
     print assumption
-            
+     
             
                 
                 
-        
-
 def pattern(word,fil,cnt):
+        #word: word from sentence containing a capital letter
+        #fil: corresponding file(e.g 4_word file for 4-letter word)
+        #cnt: counter that mentions position in the file
+        #pattern function matches the word with every word in file and replaces if a pattern is matched
         pat=""
-        ol=[]
         c=0
         n=cnt
         wd=word
         i=0
         mtch = []
         j=[]
-        #wlist = list(word)
-        #if len(wlist)<len(word):
+        #check if a letter occurs more than once in the word(for e.g in THAT, T occurs twice)
         for w in word:
                 wc = 0
                 if w.islower():
@@ -256,18 +264,19 @@ def pattern(word,fil,cnt):
                     print wc
                     if wc>1:
                         print "mtch"
-                        j.append((word.index(w)))
-                        fil = mtch
+                        j.append((word.index(w)))   #append both the index of occurrence
+                        fil = mtch          #replace the file with another list
         print fil
+        #append all the words from file in which a letter occur more than once
         if fil == mtch:
             for wrd in fil:
                 if wrd[j[0]] == wrd[j[1]]:
                     fil.append(wrd)
             print fil
+        #replace all the small letters in the word with "." for pattern matching
         for w in word:
                 wc = 0
                 if w.islower():
-                                                            
                     word=word.replace(w,'.')
                     print word
                 
@@ -290,18 +299,20 @@ def pattern(word,fil,cnt):
         #     if not c==1:
         #         print "hi1"
         #         backtrack(wd)
+
+        #match the word with every word from file and replace with the first pattern match found. 
         for ch in fil:
-            n+=1
-            print cnt
+            n+=1    
+            print n
             if re.match(word,ch):
                 pat= ch
                 print pat
                 replacefunc(wd,pat)
-                c=1
-                cnt+=1
+                c=1     #implies pattern is found  
                 break
-            else:
-                cnt+=1
+            cnt+=1
+            print cnt
+        #if no pattern is matched call backtrack
         if (n == len(fil)):
             if not c:
                 print "hi"
@@ -470,7 +481,7 @@ else:
         a_sent = sent #store sent before transposition
         print "hieee"
         transposition()
-        status=spell_count()
+        status=trans_status()
         if not status:
             t_d=1
         else:
@@ -539,7 +550,7 @@ else:
             a_sent = sent 
             if not one_w:
                 transposition()
-                status=spell_count()
+                status=trans_status()
             if not status:
                 t_d=1
             else:
