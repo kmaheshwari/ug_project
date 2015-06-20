@@ -4,6 +4,7 @@ import re
 #from grammar_test import main 
 from Tkinter import *
 import string
+import enchant#module to use english dictionary
 
 # def result(strng):
 
@@ -19,17 +20,22 @@ import string
 
 
 def main():
-    global sent,trans_cnt,a_sent,main_cnt,one_w,two_w,three_w
+    global sent,trans_cnt,a_sent,main_cnt,one_w,two_w,three_w,gfour_w,pfour_w,four_w
     t_d = 0
     t_nd=0
     main_cnt=main_cnt+1
     if main_cnt>1:
-        one_w=two_w=three_w=[]
+        one_w=[]
+        two_w=[]
+        three_w=[]
+        gfour_w=[]
+        four_w=[]
     print one_w
     print two_w
     print sent
     print "inside main"
     final_cnt = 0
+
     for word in sent.split():
         if word.isupper() and spell_check(word)==True:
             final_cnt+=1
@@ -38,7 +44,8 @@ def main():
                 if (len(word) == 1) :
                     if word.islower():
                         one_w.append(word)
-        
+        print "1 wrd"
+        print one_w
         if one_w:
             one_letter()
             a_sent = sent #store sent before transposition
@@ -57,7 +64,7 @@ def main():
 
 
         
-        if (t_d==1 or len(one_w)==0) :
+        if (t_d==1 or len(one_w)==0 or trans_cnt>0) :
             
 
             # for finding pairs with I
@@ -130,8 +137,7 @@ def main():
                             print sent
                     else:
                         t_d=1
-                else:
-                    t_d=1
+                
 
 
                 
@@ -155,7 +161,7 @@ def main():
                         if len(s1[i+1])==4:
                             nf.append(s1[i+1])
                             pat_rep(nf,nfw,cntn4)
-            if (t_d==1 ) :
+            if (t_d==1 or trans_cnt>0 ) :
                 
                 
                 print sent
@@ -179,6 +185,25 @@ def main():
                             four_w.append(word)
                 if four_w:
                     pat_rep(four_w,fw,cnt4)
+
+                for word in sent.split():
+                    if ((len(word) > 4) and (word not in gfour_w) ):
+                        if not word.isupper():
+                            gfour_w.append(word)
+                if gfour_w:
+                    for i in range(len(gfour_w)):
+                        for j in range(0,2):
+                            if gfour_w[i][j].islower():
+                                if i==1:
+                                    if gfour_w[i][j+1].islower():
+                                        pfour_w.append(gfour_w[i][:3])
+                                    else:
+                                        pfour_w.append(gfour_w[i][:2])
+                                break
+                        if pfour_w:
+                            pat_rep(pfour_w,pfw,cntp)
+
+
                     
     else:
     #     grammar_test.main(sent)
@@ -315,7 +340,7 @@ def backtrack(wrd):
     
     print sent
     b_done=1
-    main()
+    #main()
 
     # j = True
 
@@ -420,7 +445,7 @@ def pat_rep(lst,prfil,cnt):
             #     cnt=lcnt
             #     print lfil
 
-        if len(word) == 3 and prfil!=ntrw:
+        if len(word) == 3 and prfil!=ntrw and prfil!=pfw:
             
             #if a 3-letter word is in starting/ending position then replace the file with another file containing 
             #all possible 3-letter words which can come at starting or ending
@@ -678,13 +703,15 @@ else:
     main_cnt=0
     b_done=0
     cnt1=cnt2=cnt3=cnt4=cnti3=cnti4=cntn3=cntn4=s2cnt=e2cnt= 0
-    s3cnt=e3cnt=s4cnt=e4cnt=0
+    s3cnt=e3cnt=s4cnt=e4cnt=cntp=cnts=0
     assumption = {}
     assertion = {}
     one_w = []
     two_w = []
     three_w = []
     four_w = []
+    gfour_w=[]
+    pfour_w=[]
     double_w = []
     a_sent=sent
 
@@ -742,7 +769,17 @@ else:
     st_2wrd = open("st_2wrd.txt", "r+")
     stw  = st_2wrd.read().split()
 
-    main()
+    #open prefix list
+    pre_word=open("pre.txt","r+")
+    pfw=pre_word.read().split()
+
+    #open suffix list
+    suf_word=open("suf.txt","r+")
+    sw=suf_word.read().split()
+
+    
+    while (not sent.isupper()):
+        main()
 
                     
 

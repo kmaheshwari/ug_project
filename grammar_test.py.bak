@@ -4,10 +4,10 @@
 This grammar checker will fix grammar mistakes using Ginger.
 """
 import sys
-import urllib.request, urllib.parse, urllib.error
-import urllib.parse
-from urllib.error import HTTPError
-from urllib.error import URLError
+import urllib
+import urlparse
+from urllib2 import HTTPError
+from urllib2 import URLError
 import json
 class ColoredText:
 	"""Colored text class"""
@@ -32,13 +32,13 @@ class ColoredText:
 			try:
 				c = cls.color_dict[color][0]
 			except KeyError:
-				print(("Invalid text color:", color))
+				print("Invalid text color:", color)
 				return(text, gap)
 		if bgcolor is not None:
 			try:
 				bg = cls.color_dict[bgcolor][1]
 			except KeyError:
-				print(("Invalid background color:", bgcolor))
+				print("Invalid background color:", bgcolor)
 				return(text, gap)
 		s_open, s_close = '', ''
 		if c is not None:
@@ -62,13 +62,13 @@ def get_ginger_url(text):
 	netloc = "services.gingersoftware.com"
 	path = "/Ginger/correct/json/GingerTheText"
 	params = ""
-	query = urllib.parse.urlencode([
+	query = urllib.urlencode([
 	("lang", "US"),
 	("clientVersion", "2.0"),
 	("apiKey", API_KEY),
 	("text", text)])
 	fragment = ""
-	return(urllib.parse.urlunparse((scheme, netloc, path, params, query, fragment)))
+	return(urlparse.urlunparse((scheme, netloc, path, params, query, fragment)))
 
 
 def get_ginger_result(text):
@@ -78,16 +78,15 @@ def get_ginger_result(text):
 	"""
 	url = get_ginger_url(text)
 	try:
-		response = urllib.request.urlopen(url)
+		response = urllib.urlopen(url)
 	except HTTPError as e:
-		print(("HTTP Error:", e.code))
+		print("HTTP Error:", e.code)
 		quit()
 	except URLError as e:
-		print(("URL Error:", e.reason))
+		print("URL Error:", e.reason)
 		quit()
-	except IOError as xxx_todo_changeme:
-		(errno, strerror) = xxx_todo_changeme.args
-		print(("I/O error (%s): %s" % (errno, strerror)))
+	except IOError, (errno, strerror):
+		print("I/O error (%s): %s" % (errno, strerror))
 		quit
 	try:
 		result = json.loads(response.read().decode('utf-8'))
@@ -126,8 +125,8 @@ def main(o_text):
 			fixed_text = fixed_text[:from_index-fixed_gap] + colored_suggest + fixed_text[to_index-fixed_gap:]
 			color_gap += gap
 			fixed_gap += to_index-from_index-len(suggest)
-	print(("from: " + original_text))
-	print(("to: " + fixed_text))
+	print("from: " + original_text)
+	print("to: " + fixed_text)
 	return fixed_text
 if __name__ == '__main__':
 	main("aeeo")

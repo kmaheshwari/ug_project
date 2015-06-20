@@ -19,17 +19,21 @@ import string
 
 
 def main():
-    global sent,trans_cnt,a_sent,main_cnt,one_w,two_w,three_w
+    global sent,trans_cnt,a_sent,main_cnt,one_w,two_w,three_w,four_w
     t_d = 0
     t_nd=0
     main_cnt=main_cnt+1
     if main_cnt>1:
-        one_w=two_w=three_w=[]
+        one_w=[]
+        two_w=[]
+        three_w=[]
+        four_w=[]
     print one_w
     print two_w
     print sent
     print "inside main"
     final_cnt = 0
+
     for word in sent.split():
         if word.isupper() and spell_check(word)==True:
             final_cnt+=1
@@ -38,7 +42,8 @@ def main():
                 if (len(word) == 1) :
                     if word.islower():
                         one_w.append(word)
-        
+        print "1 wrd"
+        print one_w
         if one_w:
             one_letter()
             a_sent = sent #store sent before transposition
@@ -57,7 +62,7 @@ def main():
 
 
         
-        if (t_d==1 or len(one_w)==0) :
+        if (t_d==1 or len(one_w)==0 or trans_cnt>0) :
             
 
             # for finding pairs with I
@@ -130,8 +135,7 @@ def main():
                             print sent
                     else:
                         t_d=1
-                else:
-                    t_d=1
+                
 
 
                 
@@ -155,7 +159,7 @@ def main():
                         if len(s1[i+1])==4:
                             nf.append(s1[i+1])
                             pat_rep(nf,nfw,cntn4)
-            if (t_d==1 ) :
+            if (t_d==1 or trans_cnt>0 ) :
                 
                 
                 print sent
@@ -315,7 +319,7 @@ def backtrack(wrd):
     
     print sent
     b_done=1
-    main()
+    #main()
 
     # j = True
 
@@ -377,6 +381,7 @@ def pat_rep(lst,prfil,cnt):
     
     
     for word in lst:
+
         ind=lst.index(word)
         print "inside pat_rep"
         lst_len=len(lst[0])
@@ -384,10 +389,17 @@ def pat_rep(lst,prfil,cnt):
         
         for strng in sent.split():
             if len(strng)==lst_len :
-                lst.append(strng)
+                if not strng.isupper():
+                    lst.append(strng)
+                elif sent.isupper():
+                    exit()
+                else:
+                    ind-=1
         word=lst[ind]
+
         prfil = lfil
         print "this is"
+        print lst
         print prfil
         i = lst.index(word)		#index of word in list
         cnt_cap=0    			#counter for capital letter in a word
@@ -742,7 +754,13 @@ else:
     st_2wrd = open("st_2wrd.txt", "r+")
     stw  = st_2wrd.read().split()
 
-    main()
+    
+    while(not sent.isupper()):
+        main()
+    else:
+        print "Final sententence"
+        print sent
+        exit()
 
                     
 
